@@ -46,7 +46,14 @@ Se creó crud de usuarios y productos, ademas el proyecto cuenta con autenticaci
 ## urls del proyecto 
 - [Colleccion de pruebas en postman](https://www.getpostman.com/collections/15cab9fd93d1f43f7607)
 - [openApi swagger](http://cmagh.me/swagger/)
-- [urls API](http://cmagh.me/api/v0.1/)
+- urls API (Metodos se especifican en url anterior)
+    - http://cmagh.me/api/v0.1/users  
+    - http://cmagh.me/api/v0.1/products
+    - http://cmagh.me/api/v0.1/login
+    - http://cmagh.me/api/v0.1/logout
+    - http://cmagh.me/api/v0.1/password/email
+    - http://cmagh.me/api/v0.1/password/reset
+    
 
 ## dumps base de datos mySql 5.7
 

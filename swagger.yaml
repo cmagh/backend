@@ -1,0 +1,359 @@
+swagger: "2.0"
+info:
+  title: backend api
+  version: 1.0.0
+
+paths:
+  /login:
+    post:
+      summary: "Login"
+      description: "Autenticar usuario"
+      operationId: "login"
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: formData
+          name: email
+          required: true
+          type: string
+        - in: formData
+          name: password
+          required: true
+          type: string        
+      responses:
+        "200":
+          description: "Usuario autenticado"
+        "400":
+          description: "Bad request, faltan campos obligatorios"
+        "401":
+          description: "Login incorrecto"
+
+  /logout:
+    post:
+      summary: "Logout"
+      description: "Cerrar sesión"
+      operationId: "logout"
+
+      responses:
+        "204":
+          description: "Token revocado"
+
+  /password/email:
+    post:
+      summary: "Enviar email para resetear password"
+      description: "Enviar email para resetear password"
+      operationId: "sendResetLink"
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: formData
+          name: email
+          required: true
+          type: string
+        
+      responses:
+        "200":
+          description: "Email enviado"
+        "400":
+          description: "Falta email o email invalido"
+
+  /password/reset:
+    post:
+      summary: "Enviar email para resetear password"
+      description: "Enviar email para resetear password"
+      operationId: "passwordReset"
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: formData
+          name: email
+          required: true
+          type: string
+        - in: formData
+          name: token
+          required: true
+          type: string
+        - in: formData
+          name: password
+          required: true
+          type: string
+        - in: formData
+          name: password_confirmation
+          required: true
+          type: string
+        
+      responses:
+        "200":
+          description: "Passwor modificado correctamente"
+        "400":
+          description: "Falta token o token invalido"
+  
+  /user:
+    post:
+      summary: "Registrar usuario"
+      description: "Registrar usuario"
+      operationId: "storeUser"
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: formData
+          name: name
+          required: true
+          type: string
+        - in: formData
+          name: email
+          required: true
+          type: string
+        - in: formData
+          name: username
+          required: true
+          type: string
+        - in: formData
+          name: phone
+          required: true
+          type: number
+        - in: formData
+          name: birthday
+          required: true
+          type: string
+        - in: formData
+          name: password
+          required: true
+          type: string
+        - in: formData
+          name: password_confirmation
+          required: true
+          type: string          
+      responses:
+        "201":
+          description: "Usuario registrado correctamente"
+        "400":
+          description: "Bad request, error en algun campo o campo requerido vacio"
+
+    get:
+      summary: "Obtener usuarios"
+      description: "obtener usuarios, contiene paginación y busqueda por email y username"
+      operationId: "listUsers"
+      parameters:
+        - in: query
+          name: "page[size]"
+          required: false
+          type: integer
+        - in: query
+          name: "page[number]"
+          required: false
+          type: integer
+        - in: query
+          name: "filter[search]"
+          required: false
+          type: string                 
+      responses:
+        "202":
+          description: "Usuarios listados correctamente"
+        "404":
+          description: "Page not found, no se encontraron usuarios"
+        "401":
+          description: "Sin autorización para listar usuarios"
+
+  /user/{userId}:
+    get:
+      summary: "Obtener usuario"
+      description: "Obtener usuario por id"
+      operationId: "showUser"
+      parameters:
+        - in: path
+          name: "userId"
+          required: true
+          type: integer
+      responses:
+        "202":
+          description: "Usuario mostrado correctamente"
+        "404":
+          description: "Page not found, no se encontró el usuario"
+    put:
+      summary: "Modificar usuario"
+      description: "Modifica ususario existente con usuario atenticado"
+      operationId: "updateUser"
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          type: integer
+        - in: formData
+          name: name
+          required: true
+          type: string        
+        - in: formData
+          name: phone
+          required: true
+          type: number
+        - in: formData
+          name: birthday
+          required: true
+          type: string            
+      responses:
+        "200":
+          description: "Usuario modificado"
+        "400":
+          description: "Bad request, error en algun campo o campo vacio"
+        "401":
+          description: "Sin autorización para actualizar usuario"
+
+    delete:
+      summary: "Eliminar usuario"
+      description: "Elimina usuario existente con usuario atenticado"
+      operationId: "deleteUser"      
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          type: integer  
+          
+      responses:
+        "204":
+          description: "Usuario eliminado"
+        "404":
+          description: "Not found, usuario no existe"
+        "401":
+          description: "Sin autorización para eliminar usuario"
+    
+
+
+
+  /products:
+    post:
+      summary: "Agregar nuevo producto"
+      description: "Agregar producto, solo disponible con usuario atenticado"
+      operationId: "storeProduct"
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: formData
+          name: SKU
+          required: true
+          type: string
+        - in: formData
+          name: name
+          required: true
+          type: string
+        - in: formData
+          name: stock
+          required: true
+          type: integer
+        - in: formData
+          name: price
+          required: true
+          type: number
+        - in: formData
+          name: description
+          required: false
+          type: string
+        - in: formData
+          name: img
+          required: false
+          type: string          
+      responses:
+        "201":
+          description: "Producto creado"
+        "400":
+          description: "Bad request, error en algun campo"
+        "401":
+          description: "Sin autorización para guardar producto"
+    get:
+      summary: "Obtener productos"
+      description: "obtener productos, contiene paginación y busqueda por name y SKU"
+      operationId: "listProducts"
+      parameters:
+        - in: query
+          name: "page[size]"
+          required: false
+          type: integer
+        - in: query
+          name: "page[number]"
+          required: false
+          type: integer
+        - in: query
+          name: "filter[search]"
+          required: false
+          type: string                 
+      responses:
+        "202":
+          description: "Productos listados correctamente"
+        "404":
+          description: "Page not found, no se encontraron productos"
+
+  /products/{productId}:
+    get:
+      summary: "Obtener producto"
+      description: "Obtener producto por id"
+      operationId: "showProduct"
+      parameters:
+        - in: path
+          name: "productId"
+          required: true
+          type: integer
+      responses:
+        "202":
+          description: "Producto mostrado correctamente"
+        "404":
+          description: "Page not found, no se encontró el producto"
+  
+    put:
+      summary: "Modificar producto"
+      description: "Modifica producto existente con usuario atenticado"
+      operationId: "updateProduct"
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          type: integer  
+        - in: formData
+          name: name
+          required: true
+          type: string
+        - in: formData
+          name: stock
+          required: true
+          type: integer
+        - in: formData
+          name: price
+          required: true
+          type: number
+        - in: formData
+          name: description
+          required: false
+          type: string
+        - in: formData
+          name: img
+          required: false
+          type: string          
+      responses:
+        "200":
+          description: "Producto modificado"
+        "400":
+          description: "Bad request, error en algun campo"
+        "401":
+          description: "Sin autorización para actualizar producto"
+
+    delete:
+      summary: "Eliminar producto"
+      description: "Elimina producto existente con usuario atenticado"
+      operationId: "deleteProduct"
+      
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          type: integer  
+          
+      responses:
+        "204":
+          description: "Producto eliminado"
+        "404":
+          description: "Not found, producto no existe"
+        "401":
+          description: "Sin autorización para eliminar producto"
